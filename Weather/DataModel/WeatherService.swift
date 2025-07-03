@@ -10,14 +10,27 @@
 import Foundation
 
 class WeatherService {
-    private let apiKey = getWeatherAPIKey()
+    private var apiKey: String?
     private let baseURL = "https://api.weatherapi.com/v1/forecast.json"
     
     private var cachedWeatherData: [String: (weather: WeatherResponse, timestamp: Date)] = [:]
     private var lastFetchDate: Date?
     private let cacheDuration: TimeInterval = 3600 // cache for 30 minutes
     
+    var hasApiKey: Bool {
+        return apiKey != nil
+    }
+    
+    func setApiKey(_ key: String) {
+        self.apiKey = key
+    }
+    
     func fetchWeather<T: Codable>(for location: String, days: Int = totalDays) async -> T? {
+        guard let apiKey = apiKey else {
+            print("API key not set yet")
+            return nil
+        }
+        
         // Check if we already have fresh cached data for this location
         if let cache = cachedWeatherData[location],
            Date().timeIntervalSince(cache.timestamp) < cacheDuration,

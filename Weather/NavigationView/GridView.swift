@@ -20,9 +20,11 @@ struct GridView: View {
     @State private var errorMessage: String?
     @State private var currentWeather: [Int:WeatherResponse] = [:]
     @State private var searchTask: Task<Void, Never>?
+
     
     @Binding var savedCities: [AutoCompleteRespone]
     var onSelectCity: (AutoCompleteRespone) -> Void
+    let weatherService: WeatherService
     
     var body: some View {
         NavigationStack {
@@ -164,9 +166,8 @@ struct GridView: View {
     func loadTempForCity(_ city: AutoCompleteRespone) async {
         // Use lat,lon as parameter for api call, seems to be most accurate
         let locationKey = "\(city.lat),\(city.lon)"
-        let service = WeatherService()
 
-        if let weather: WeatherResponse = await service.fetchWeather(for: locationKey) {
+        if let weather: WeatherResponse = await weatherService.fetchWeather(for: locationKey) {
             await MainActor.run {
                 currentWeather[city.id] = weather
             }

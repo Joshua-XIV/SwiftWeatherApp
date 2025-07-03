@@ -28,6 +28,7 @@ struct MainContentView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var searchErrorMessage: String?
+    let weatherService: WeatherService
     //@StateObject private var locationManager = LocationManager()
     
     var body: some View {
@@ -144,10 +145,9 @@ struct MainContentView: View {
     func loadWeather() async {
         isLoading = true
         errorMessage = nil
-        let service = WeatherService()
         
         // Attempt to fetch weather data using lat, lon of selected city
-        if let fetchedWeather: WeatherResponse = await service.fetchWeather(for: locationQuery ?? "") {
+        if let fetchedWeather: WeatherResponse = await weatherService.fetchWeather(for: locationQuery ?? "") {
             weather = fetchedWeather
         } else {
             errorMessage = "Failed to fetch weather data"
