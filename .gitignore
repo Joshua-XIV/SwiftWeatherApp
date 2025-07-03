@@ -13,8 +13,8 @@ DerivedData/
 xcuserdata/
 
 # Ignore test folders
-# WeatherTests/
-# WeatherUITests/
+WeatherTests/
+WeatherUITests/
 
 # Ignore .DS_Store files
 .DS_Store
